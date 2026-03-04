@@ -1,0 +1,58 @@
+name: Build Platform Wheels
+
+on:
+  push:
+    branches: [ main, master ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build_wheels:
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Build C++ Binaries (CMake)
+        run: |
+          mkdir build && cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Release
+          cmake --build . --config Release
+
+      - name: Stage Binaries for setup.py
+        shell: bash
+        run: |
+          mkdir -p bin/Linux bin/windows bin/MacOS
+          
+          if [ "${{ matrix.os }}" = "windows-latest" ]; then
+            cp build/Release/Lerc.dll bin/windows/
+            cp build/Release/Lerc.lib bin/windows/
+          elif [ "${{ matrix.os }}" = "macos-latest" ]; then
+            cp build/libLerc.dylib bin/MacOS/
+          else
+            cp build/libLerc.so bin/Linux/
+          fi
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Build Wheel
+        run: |
+          python -m pip install --upgrade pip
+          pip install build
+          cd OtherLanguages/Python
+          python -m build
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: pylerc-wheels-${{ matrix.os }}
+          path: OtherLanguages/Python/dist/*.whl

@@ -1,8 +1,14 @@
 import setuptools
-
 from glob import glob
 from os.path import basename, exists, join, getmtime
 from shutil import copyfile
+from setuptools.dist import Distribution
+
+class BinaryDistribution(Distribution):
+    def is_pure(self):
+        return False
+    def has_ext_modules(self):
+        return True
 
 readme_path = join("lerc", "README.md")
 
@@ -35,6 +41,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     license="Apache 2",
     url="https://github.com/Esri/lerc",
+    distclass=BinaryDistribution,
     packages=setuptools.find_packages(),
     install_requires=["numpy >=2.3.0,<3"],
     classifiers=[
@@ -42,7 +49,6 @@ setuptools.setup(
         "Programming Language :: Python :: 3.12",
         "Programming Language :: Python :: 3.13",
         "License :: OSI Approved :: Apache Software License",
-        "Operating System :: OS Independent",
     ],
     package_data={"lerc": BINARY_TYPES},
     python_requires=">=3.11",
