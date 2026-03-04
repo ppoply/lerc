@@ -2,11 +2,19 @@ name: Build Platform Wheels
 
 on:
   push:
-    branches: [ "**" ]
-    tags: [ 'v*' ]
+    branches: [ main, master ]
+    paths:
+      - 'OtherLanguages/Python/**'
+      - 'src/**'
+      - '.github/workflows/build_wheels.yml'
+    
+    tags:
+      - 'v*'
+
   pull_request:
-    branches: [ "**" ]
-  workflow_dispatch:
+    paths:
+      - 'OtherLanguages/Python/**'
+
 
 jobs:
   build_wheels:

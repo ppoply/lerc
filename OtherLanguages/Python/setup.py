@@ -3,6 +3,8 @@ from glob import glob
 from os.path import basename, exists, join, getmtime
 from shutil import copyfile
 
+# Forces the wheel to be platform-specific (e.g., win_amd64)
+# but compatible with any Python 3 version (py3-none).
 try:
     from wheel.bdist_wheel import bdist_wheel as _bdist_wheel
     class bdist_wheel(_bdist_wheel):
