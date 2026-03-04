@@ -22,7 +22,6 @@ jobs:
 
       - name: Build C++ Binaries (CMake)
         run: |
-          rm -rf cmake_build
           mkdir cmake_build
           cd cmake_build
           cmake .. -DCMAKE_BUILD_TYPE=Release
