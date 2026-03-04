@@ -22,6 +22,7 @@ jobs:
 
       - name: Build C++ Binaries (CMake)
         run: |
+          rm -rf cmake_build
           mkdir cmake_build
           cd cmake_build
           cmake .. -DCMAKE_BUILD_TYPE=Release
@@ -33,12 +34,12 @@ jobs:
           mkdir -p bin/Linux bin/windows bin/MacOS
           
           if [ "${{ matrix.os }}" = "windows-latest" ]; then
-            cp cmake_build/Release/Lerc.dll bin/windows/ || cp cmake_build/Lerc.dll bin/windows/
-            cp cmake_build/Release/Lerc.lib bin/windows/ || cp cmake_build/Lerc.lib bin/windows/
+            cp cmake_build/Release/Lerc.dll bin/windows/ || cp cmake_build/Lerc.dll bin/windows/ || echo "DLL not found"
+            cp cmake_build/Release/Lerc.lib bin/windows/ || cp cmake_build/Lerc.lib bin/windows/ || echo "LIB not found"
           elif [ "${{ matrix.os }}" = "macos-latest" ]; then
-            cp cmake_build/libLerc.dylib bin/MacOS/ || cp cmake_build/Release/libLerc.dylib bin/MacOS/
+            cp cmake_build/libLerc.dylib bin/MacOS/ || cp cmake_build/Release/libLerc.dylib bin/MacOS/ || echo "DYLIB not found"
           else
-            cp cmake_build/libLerc.so bin/Linux/ || cp cmake_build/Release/libLerc.so bin/Linux/
+            cp cmake_build/libLerc.so bin/Linux/ || cp cmake_build/Release/libLerc.so bin/Linux/ || echo "SO not found"
           fi
 
       - name: Set up Python

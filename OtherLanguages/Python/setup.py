@@ -2,18 +2,22 @@ import setuptools
 from glob import glob
 from os.path import basename, exists, join, getmtime
 from shutil import copyfile
-from setuptools.dist import Distribution
 
-class BinaryDistribution(Distribution):
-    def is_pure(self):
-        return False
-    def has_ext_modules(self):
-        return True
-    def get_tag(self):
-        return ("py3", "none", Distribution.get_tag(self)[2])
+try:
+    from wheel.bdist_wheel import bdist_wheel as _bdist_wheel
+    class bdist_wheel(_bdist_wheel):
+        def finalize_options(self):
+            _bdist_wheel.finalize_options(self)
+            self.root_is_pure = False
+            
+        def get_tag(self):
+            _, _, plat = _bdist_wheel.get_tag(self)
+            return "py3", "none", plat
+    cmdclass = {'bdist_wheel': bdist_wheel}
+except ImportError:
+    cmdclass = {}
 
 readme_path = join("lerc", "README.md")
-
 try:
     with open(readme_path, "r") as fh:
         long_description = fh.read()
@@ -43,9 +47,9 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     license="Apache 2",
     url="https://github.com/Esri/lerc",
-    distclass=BinaryDistribution,
     packages=setuptools.find_packages(),
     install_requires=["numpy >=2.3.0,<3"],
+    cmdclass=cmdclass,
     classifiers=[
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
