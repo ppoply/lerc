@@ -9,6 +9,8 @@ class BinaryDistribution(Distribution):
         return False
     def has_ext_modules(self):
         return True
+    def get_tag(self):
+        return ("py3", "none", Distribution.get_tag(self)[2])
 
 readme_path = join("lerc", "README.md")
 
