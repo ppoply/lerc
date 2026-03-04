@@ -3,7 +3,6 @@ name: Build Platform Wheels
 on:
   push:
     branches: [ "**" ]
-    tags: [ 'v*' ]
   pull_request:
     branches: [ "**" ]
   workflow_dispatch:
@@ -22,7 +21,8 @@ jobs:
 
       - name: Build C++ Binaries (CMake)
         run: |
-          mkdir build && cd build
+          mkdir cmake_build
+          cd cmake_build
           cmake .. -DCMAKE_BUILD_TYPE=Release
           cmake --build . --config Release
 
@@ -32,12 +32,12 @@ jobs:
           mkdir -p bin/Linux bin/windows bin/MacOS
           
           if [ "${{ matrix.os }}" = "windows-latest" ]; then
-            cp build/Release/Lerc.dll bin/windows/
-            cp build/Release/Lerc.lib bin/windows/
+            cp cmake_build/Release/Lerc.dll bin/windows/ || cp cmake_build/Lerc.dll bin/windows/
+            cp cmake_build/Release/Lerc.lib bin/windows/ || cp cmake_build/Lerc.lib bin/windows/
           elif [ "${{ matrix.os }}" = "macos-latest" ]; then
-            cp build/libLerc.dylib bin/MacOS/
+            cp cmake_build/libLerc.dylib bin/MacOS/ || cp cmake_build/Release/libLerc.dylib bin/MacOS/
           else
-            cp build/libLerc.so bin/Linux/
+            cp cmake_build/libLerc.so bin/Linux/ || cp cmake_build/Release/libLerc.so bin/Linux/
           fi
 
       - name: Set up Python
