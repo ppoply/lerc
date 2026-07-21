@@ -143,7 +143,6 @@ jobs:
       - name: Build Noarch Conda Distribution
         shell: bash -l {0}
         run: |
-          python OtherLanguages/Python/setup.py sdist --dry-run
           mkdir -p conda-out
           conda build build/conda/lerc/ --output-folder conda-out/ --conda-pkg-format 2
 
