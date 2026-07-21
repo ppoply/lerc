@@ -133,13 +133,13 @@ jobs:
       - name: Setup Miniconda Environment
         uses: conda-incubator/setup-miniconda@v4
         with:
+          auto-update-conda: true
           auto-activate: true
           activate-environment: ""
-          python-version: '3.11'
 
       - name: Install Conda Build Tooling
         shell: bash -el {0}
-        run: conda install -y conda-build
+        run: conda install -y python=3.11 conda-build
 
       - name: Build Noarch Conda Distribution
         shell: bash -el {0}
