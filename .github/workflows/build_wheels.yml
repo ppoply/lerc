@@ -68,7 +68,7 @@ jobs:
           elif [ "${{ matrix.os }}" = "macos-latest" ]; then
             cp cmake_build/libLerc.dylib bin/MacOS/ || cp cmake_build/Release/libLerc.dylib bin/MacOS/ || echo "DYLIB not found"
           else
-            cp -P cmake_build/libLerc.so* bin/Linux/ || cp -P cmake_build/Release/libLerc.so* bin/Linux/ || echo "SO variants not found"
+            cp cmake_build/libLerc.so bin/Linux/libLerc.so.4 || cp cmake_build/Release/libLerc.so bin/Linux/libLerc.so.4 || echo "libLerc.so.4 not found"
           fi
 
       - name: Set up Python
