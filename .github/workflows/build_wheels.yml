@@ -148,7 +148,7 @@ jobs:
           python setup.py build
           cd ../..
           mkdir -p conda-out
-          conda build build/conda/lerc/ --output-folder conda-out/ --conda-pkg-format 2
+          conda build build/conda/lerc/ --output-folder conda-out/
 
       - name: Upload Conda Distribution Artifacts
         uses: actions/upload-artifact@v4
