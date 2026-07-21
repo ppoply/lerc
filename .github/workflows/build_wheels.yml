@@ -131,14 +131,18 @@ jobs:
           path: bin/
 
       - name: Setup Miniconda Environment
-        uses: conda-incubator/setup-miniconda@v3
+        uses: conda-incubator/setup-miniconda@v4
         with:
-          auto-update-conda: true
+          auto-activate: true
+          activate-environment: ""
           python-version: '3.11'
-          conda-build-version: 'latest'
+
+      - name: Install Conda Build Tooling
+        shell: bash -el {0}
+        run: conda install -y conda-build
 
       - name: Build Noarch Conda Distribution
-        shell: bash -l {0}
+        shell: bash -el {0}
         run: |
           cd OtherLanguages/Python
           python setup.py build
@@ -151,3 +155,5 @@ jobs:
         with:
           name: pylerc-conda-package
           path: conda-out/noarch/*.conda
+
+
